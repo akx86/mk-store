@@ -113,8 +113,9 @@ export default async function HomePage({
             <div className="absolute top-0 left-0 w-1 h-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
             <span className="text-2xl animate-pulse">⏳</span>
             <p className="text-sm md:text-base font-bold text-orange-400">
-              مرحباً يا {session.user.name.split(" ")[0]}! حسابك كتاجر قيد
-              المراجعة حالياً. ستظهر لك أسعار الجملة فور اعتماد الإدارة لطلبك.
+              مرحباً يا {session?.user?.name?.split(" ")[0] || "تاجر"}! حسابك
+              كتاجر قيد المراجعة حالياً. ستظهر لك أسعار الجملة فور اعتماد
+              الإدارة لطلبك.
             </p>
           </div>
         </div>
