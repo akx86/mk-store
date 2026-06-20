@@ -13,10 +13,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "mk store",
-  description: "Mk store for mobile service",
+  title: "MK Store | أحدث التقنيات",
+  description: "تصفح أقوى الهواتف والإكسسوارات بأسعار الجملة والقطاعي",
+  openGraph: {
+    title: "MK Store",
+    description: "متجرك الأول للإلكترونيات",
+    images: ["/logo.jpeg"],
+    type: "website",
+  },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -4,48 +4,25 @@ import { getProductById } from "@/actions/shop.actions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import WhatsAppButton from "@/components/shop/WhatsAppButton";
-import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const resolvedParams = await params;
-  const productId = resolvedParams.id;
-  const res = await getProductById(productId);
-
-  if (!res.success || !res.product) {
-    return {
-      title: "منتج غير متوفر | MK Store",
-      description: "هذا المنتج لم يعد متوفراً في المتجر.",
-    };
-  }
-
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const res = await getProductById(params.id);
   const product = res.product;
+
+  if (!product) {
+    return { title: "منتج غير موجود | MK Store" };
+  }
 
   return {
     title: `${product.title} | MK Store`,
-    description: product.description.substring(0, 160),
+    description: `اكتشف مواصفات وسعر ${product.title}`,
     openGraph: {
-      title: `${product.title} | MK Store`,
-      description: product.description.substring(0, 160),
-      images: [
-        {
-          url: product.images?.[0] || "",
-          height: 600,
-          alt: product.title,
-        },
-      ],
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
       title: product.title,
-      description: product.description.substring(0, 160),
-      images: [product.images?.[0] || ""],
+      description: `اطلب ${product.title} الآن من MK Store`,
+      images: product.images?.[0] ? [product.images[0]] : ["/logo.jpeg"],
+      type: "article",
     },
   };
 }
