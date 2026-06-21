@@ -40,7 +40,7 @@ export async function getProductsByCategorySlug(slug: string) {
       category: category._id,
       isHidden: { $ne: true },
     })
-      .sort({ createdAt: -1 })
+      .sort({ isFeatured: -1, createdAt: -1 })
       .populate("category", "name slug")
       .lean();
 
@@ -70,10 +70,10 @@ export async function getShopData(
     }
 
     const [categories, products, totalProducts] = await Promise.all([
-      Category.find({}).lean(),
+      Category.find({}).sort({ isFeatured: -1, createdAt: -1 }).lean(),
       Product.find(query)
         .populate("category", "name")
-        .sort({ createdAt: -1 })
+        .sort({ isFeatured: -1, createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
@@ -88,6 +88,7 @@ export async function getShopData(
       name: c.name,
       slug: c.slug,
       image: c.image || "",
+      isFeatured: c.isFeatured || false,
     }));
 
     const safeProducts = products.map((p: any) => ({
@@ -97,6 +98,7 @@ export async function getShopData(
       category: p.category?.name || "",
       price: isMerchant ? p.wholesalePrice : p.retailPrice,
       isWholesale: isMerchant,
+      isFeatured: p.isFeatured || false,
     }));
 
     return {

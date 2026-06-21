@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // 🌟 ضفنا ده عشان ريفريش الجدول
 import {
   createCategory,
   updateCategory,
@@ -69,17 +70,36 @@ export default function CategoryManager({
   category,
   isRowAction,
 }: CategoryManagerProps) {
+  const router = useRouter(); // 🌟 استدعاء الراوتر
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [name, setName] = useState(category?.name || "");
   const [slug, setSlug] = useState(category?.slug || "");
+  const [isFeatured, setIsFeatured] = useState(category?.isFeatured || false);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     category?.image || null,
   );
+
+  // 🌟 تحديث الـ States لما المودال يفتح
+  useEffect(() => {
+    if (isOpen && category) {
+      setName(category.name || "");
+      setSlug(category.slug || "");
+      setIsFeatured(category.isFeatured || false);
+      setPreviewUrl(category.image || null);
+      setSelectedFile(null);
+    } else if (isOpen && !category) {
+      setName("");
+      setSlug("");
+      setIsFeatured(false);
+      setPreviewUrl(null);
+      setSelectedFile(null);
+    }
+  }, [isOpen, category]);
 
   useEffect(() => {
     if (!selectedFile) return;
@@ -100,7 +120,8 @@ export default function CategoryManager({
         finalImageUrl = await uploadImage(selectedFile);
       }
 
-      const categoryData = { name, slug, image: finalImageUrl };
+      // 🌟 ضفنا isFeatured للـ Payload
+      const categoryData = { name, slug, isFeatured, image: finalImageUrl };
 
       let res;
       if (category?._id) {
@@ -112,12 +133,7 @@ export default function CategoryManager({
       if (res.error) throw new Error(res.error);
 
       setIsOpen(false);
-      if (!category) {
-        setName("");
-        setSlug("");
-        setSelectedFile(null);
-        setPreviewUrl(null);
-      }
+      router.refresh(); // 🌟 ريفريش للجدول بعد الحفظ
     } catch (err: any) {
       setError(err.message || "حدث خطأ غير متوقع");
     } finally {
@@ -131,6 +147,7 @@ export default function CategoryManager({
     const res = await deleteCategory(category._id);
     if (res.error) alert(res.error);
     setIsLoading(false);
+    router.refresh(); // 🌟 ريفريش للجدول بعد الحذف
   };
 
   // 🎨 Premium Minimalist Form Content
@@ -167,6 +184,37 @@ export default function CategoryManager({
           placeholder="smart-phones"
           className="bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all text-left h-12 rounded-xl"
         />
+      </div>
+
+      {/* 🌟 حقل تثبيت القسم (Featured) */}
+      <div className="flex items-center justify-between bg-amber-50 border border-amber-200 p-4 rounded-xl shadow-sm">
+        <div className="space-y-1">
+          <Label
+            className="text-amber-900 font-black text-sm cursor-pointer"
+            onClick={() => setIsFeatured(!isFeatured)}
+          >
+            تثبيت في القمة (Featured) ⭐
+          </Label>
+          <p className="text-[10px] text-amber-700 font-medium">
+            تفعيل هذا الخيار سيجعل القسم يظهر في مقدمة شريط الأقسام للعملاء.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsFeatured(!isFeatured)}
+          className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+            isFeatured ? "bg-amber-500" : "bg-slate-300"
+          }`}
+          role="switch"
+          aria-checked={isFeatured}
+        >
+          <span
+            aria-hidden="true"
+            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+              isFeatured ? "-translate-x-6" : "translate-x-0"
+            }`}
+          />
+        </button>
       </div>
 
       {/* حقل رفع الصورة (Clean UI) */}
@@ -220,7 +268,7 @@ export default function CategoryManager({
               تعديل
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-white border-slate-100 shadow-xl sm:max-w-md rounded-[2rem]">
+          <DialogContent className="bg-white border-slate-100 shadow-xl sm:max-w-md rounded-[2rem] max-h-[90vh] overflow-y-auto hide-scrollbar">
             <DialogHeader>
               <DialogTitle className="text-xl font-black text-slate-900 tracking-tight text-right">
                 تعديل القسم
@@ -251,7 +299,7 @@ export default function CategoryManager({
           + إضافة قسم جديد
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-white border-slate-100 shadow-xl sm:max-w-md rounded-[2rem]">
+      <DialogContent className="bg-white border-slate-100 shadow-xl sm:max-w-md rounded-[2rem] max-h-[90vh] overflow-y-auto hide-scrollbar">
         <DialogHeader>
           <DialogTitle className="text-xl font-black text-slate-900 tracking-tight text-right">
             إضافة قسم جديد

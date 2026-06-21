@@ -69,6 +69,7 @@ export default function ProductManager({
   );
   const [categoryId, setCategoryId] = useState(product?.category?._id || "");
   const [isHidden, setIsHidden] = useState(product?.isHidden || false);
+  const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
 
   // 🌟 تعديل الـ State لتدعم مصفوفة من الملفات والروابط
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -87,6 +88,7 @@ export default function ProductManager({
       setIsHidden(product.isHidden || false);
       setPreviewUrls(product.images || []);
       setSelectedFiles([]);
+      setIsFeatured(product.isFeatured || false);
     } else if (isOpen && !product) {
       setTitle("");
       setDescription("");
@@ -96,6 +98,7 @@ export default function ProductManager({
       setIsHidden(false);
       setPreviewUrls([]);
       setSelectedFiles([]);
+      setIsFeatured(false);
     }
   }, [isOpen, product]);
 
@@ -134,6 +137,7 @@ export default function ProductManager({
         wholesalePrice: Number(wholesalePrice),
         category: categoryId,
         isHidden,
+        isFeatured,
         images: finalImageUrls, // مصفوفة الصور الكاملة
       };
 
@@ -270,6 +274,36 @@ export default function ProductManager({
             aria-hidden="true"
             className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
               isHidden ? "-translate-x-6" : "translate-x-0"
+            }`}
+          />
+        </button>
+      </div>
+      {/* 🌟 حقل تثبيت المنتج (Featured) */}
+      <div className="flex items-center justify-between bg-amber-50 border border-amber-200 p-4 rounded-xl shadow-sm mt-4">
+        <div className="space-y-1">
+          <Label
+            className="text-amber-900 font-black text-sm cursor-pointer"
+            onClick={() => setIsFeatured(!isFeatured)}
+          >
+            تثبيت في القمة (Featured) ⭐
+          </Label>
+          <p className="text-[10px] text-amber-700 font-medium">
+            تفعيل هذا الخيار سيجعل المنتج يظهر دائماً في بداية الكتالوج.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsFeatured(!isFeatured)}
+          className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+            isFeatured ? "bg-amber-500" : "bg-slate-300"
+          }`}
+          role="switch"
+          aria-checked={isFeatured}
+        >
+          <span
+            aria-hidden="true"
+            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+              isFeatured ? "-translate-x-6" : "translate-x-0"
             }`}
           />
         </button>

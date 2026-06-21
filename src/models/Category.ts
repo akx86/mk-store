@@ -14,7 +14,12 @@ const CategorySchema: Schema = new Schema(
     name: { type: String, required: true, unique: true },
     slug: { type: String, required: true, unique: true },
     image: { type: String, default: "" },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   { timestamps: true }, // بيضيف createdAt و updatedAt تلقائياً
 );
 

@@ -39,17 +39,19 @@ export default async function HomePage({
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto p-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-12 h-12 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform p-1.5">
+            {/* 🌟 اللوجو الدائري المحسن: زووم داخلي لتركيز الفوكس على الشعار وقص الخلفية */}
+            <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-full shadow-sm border border-slate-200 overflow-hidden group-hover:scale-105 transition-transform bg-[#0d1117] flex items-center justify-center">
               <Image
                 src="/logo.jpeg"
                 alt="MK Store Logo"
                 fill
-                sizes="48px"
-                className="object-contain rounded-xl"
+                sizes="(max-width: 768px) 48px, 56px"
+                // 👈 scale-125 بتعمل زووم بنسبة 25% جوه الدايرة عشان تخفي الحواف وتكبر الشعار الفعلي
+                className="object-cover scale-125 transition-transform duration-300"
                 priority
               />
             </div>
-            <span className="font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600 tracking-tight">
+            <span className="font-black text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600 tracking-tight">
               MK Store
             </span>
           </Link>
@@ -189,8 +191,15 @@ export default async function HomePage({
               key={cat._id}
               href={`/?category=${cat._id}`}
               scroll={false}
-              className="flex-shrink-0 flex flex-col items-center gap-4 group snap-start w-28 md:w-32"
+              className="flex-shrink-0 flex flex-col items-center gap-4 group snap-start w-28 md:w-32 relative"
             >
+              {/* 🌟 إضافة بادج القسم المميز */}
+              {cat.isFeatured && (
+                <div className="absolute -top-3 z-30 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1 border-2 border-white transform rotate-[-3deg]">
+                  <span>⭐</span> مميز
+                </div>
+              )}
+
               <div
                 className={`relative w-28 h-28 md:w-32 md:h-32 rounded-[2rem] overflow-hidden flex items-center justify-center transition-all duration-300 ${categoryId === cat._id ? "bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[0_10px_25px_-5px_rgba(79,70,229,0.4)] transform -translate-y-2 ring-4 ring-indigo-100" : "bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-200 hover:-translate-y-1"}`}
               >
@@ -239,6 +248,13 @@ export default async function HomePage({
                 {/* 🛠️ حل الكروت السايحة: خلفية بيضاء صريحة، بوردر واضح، وشادو ثابت */}
                 <div className="bg-white border border-slate-200 shadow-sm rounded-[1.5rem] overflow-hidden h-full flex flex-col hover:border-indigo-300 hover:shadow-[0_15px_35px_-10px_rgba(79,70,229,0.2)] transition-all duration-300 transform group-hover:-translate-y-1">
                   <div className="relative aspect-square overflow-hidden flex items-center justify-center bg-slate-50 border-b border-slate-100">
+                    {/* 🌟 إضافة بادج المنتج المميز */}
+                    {prod.isFeatured && (
+                      <div className="absolute top-2 right-2 z-20 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[9px] font-black px-2 py-1 rounded-full shadow-sm flex items-center gap-1">
+                        <span>🔥</span> مميز
+                      </div>
+                    )}
+
                     {prod.images?.[0] ? (
                       <Image
                         src={prod.images[0]}

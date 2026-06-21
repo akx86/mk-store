@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
@@ -31,7 +32,9 @@ export async function createProduct(productData: {
   images: string[];
   retailPrice: number;
   wholesalePrice: number;
-  category: string; // ObjectId as string
+  category: string;
+  isHidden?: boolean;
+  isFeatured?: boolean;
 }) {
   try {
     await verifyAdmin();
@@ -124,6 +127,7 @@ export async function getProducts() {
           }
         : null,
       isHidden: prod.isHidden || false,
+      isFeatured: prod.isFeatured || false,
     }));
 
     return { success: true, products: safeProducts };
@@ -143,6 +147,7 @@ export async function updateProduct(
     wholesalePrice: number;
     category: string;
     isHidden: boolean;
+    isFeatured: boolean;
   }>,
 ) {
   try {
@@ -238,7 +243,8 @@ export async function getCategories() {
       _id: cat._id.toString(),
       name: cat.name,
       slug: cat.slug,
-      image: cat.image || "", // 🔴 تمرير الصورة للكلاينت
+      image: cat.image || "",
+      isFeatured: cat.isFeatured || false,
     }));
 
     return { success: true, categories: safeCategories };
@@ -252,6 +258,7 @@ export async function createCategory(data: {
   name: string;
   slug: string;
   image?: string;
+  isFeatured: boolean;
 }) {
   try {
     await dbConnect();
@@ -268,7 +275,7 @@ export async function createCategory(data: {
 // 3. تحديث التعديل (نستقبل الـ image)
 export async function updateCategory(
   id: string,
-  data: { name: string; slug: string; image?: string },
+  data: { name: string; slug: string; image?: string; isFeatured?: boolean },
 ) {
   try {
     await dbConnect();
