@@ -133,44 +133,48 @@ export default function CategoryManager({
     setIsLoading(false);
   };
 
-  // 🎨 Cyberpunk Form Content
+  // 🎨 Premium Minimalist Form Content
   const formContent = (
-    <form onSubmit={handleSubmit} className="space-y-5 mt-4 text-slate-200">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 mt-4 text-slate-900"
+      dir="rtl"
+    >
       {error && (
-        <div className="text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 p-3 rounded-lg font-medium">
+        <div className="text-red-600 text-sm bg-red-50 border border-red-100 p-3 rounded-xl font-bold text-center">
           {error}
         </div>
       )}
 
-      <div className="space-y-2">
-        <Label className="text-slate-400">اسم القسم</Label>
+      <div className="space-y-2.5">
+        <Label className="text-slate-700 font-bold">اسم القسم</Label>
         <Input
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="مثال: هواتف ذكية"
-          className="bg-[#050505] border-slate-800 text-slate-100 placeholder-slate-600 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+          className="bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl"
         />
       </div>
 
-      <div className="space-y-2">
-        <Label className="text-slate-400">الرابط (Slug)</Label>
+      <div className="space-y-2.5">
+        <Label className="text-slate-700 font-bold">الرابط (Slug)</Label>
         <Input
           required
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
           dir="ltr"
           placeholder="smart-phones"
-          className="bg-[#050505] border-slate-800 text-slate-100 placeholder-slate-600 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all text-left"
+          className="bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all text-left h-12 rounded-xl"
         />
       </div>
 
-      {/* حقل رفع الصورة (Dark UI) */}
-      <div className="space-y-2 bg-slate-900/50 border border-slate-800 p-4 rounded-xl">
-        <Label className="text-slate-400">صورة القسم</Label>
+      {/* حقل رفع الصورة (Clean UI) */}
+      <div className="space-y-2.5 bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+        <Label className="text-slate-700 font-bold text-xs">صورة القسم</Label>
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
           {previewUrl ? (
-            <div className="relative w-20 h-20 bg-[#050505] rounded-xl border border-cyan-500/30 overflow-hidden flex-shrink-0 shadow-[0_0_10px_rgba(6,182,212,0.1)]">
+            <div className="relative w-16 h-16 bg-slate-50 rounded-xl border border-slate-200 overflow-hidden flex-shrink-0 shadow-sm">
               <Image
                 src={previewUrl}
                 alt="Preview"
@@ -179,7 +183,7 @@ export default function CategoryManager({
               />
             </div>
           ) : (
-            <div className="w-20 h-20 bg-[#050505] rounded-xl border border-dashed border-slate-700 flex items-center justify-center text-slate-500 text-xs flex-shrink-0">
+            <div className="w-16 h-16 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-xs font-medium flex-shrink-0">
               لا صورة
             </div>
           )}
@@ -187,7 +191,7 @@ export default function CategoryManager({
             type="file"
             accept="image/*"
             onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-            className="cursor-pointer flex-1 bg-[#050505] border-slate-800 text-slate-300 file:bg-slate-800 file:text-slate-200 file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 hover:file:bg-slate-700 transition-all"
+            className="cursor-pointer flex-1 bg-white border-0 p-0 text-slate-500 file:bg-slate-100 file:text-slate-700 file:font-semibold file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-3 hover:file:bg-slate-200 transition-all h-auto"
           />
         </div>
       </div>
@@ -195,14 +199,14 @@ export default function CategoryManager({
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-cyan-600/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-600/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all py-6 text-lg font-bold"
+        className="w-full bg-slate-900 text-white hover:bg-slate-800 hover:-translate-y-0.5 shadow-sm transition-all h-12 rounded-xl font-bold text-base mt-2"
       >
         {isLoading ? "جاري الحفظ..." : "حفظ القسم"}
       </Button>
     </form>
   );
 
-  // 1. أزرار الإجراءات داخل الجدول
+  // 1. أزرار الإجراءات داخل الجدول (Clean Row Actions)
   if (isRowAction) {
     return (
       <div className="flex justify-center gap-2">
@@ -211,14 +215,14 @@ export default function CategoryManager({
             <Button
               variant="outline"
               size="sm"
-              className="bg-transparent border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 hover:text-cyan-300"
+              className="bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 shadow-sm rounded-lg"
             >
               تعديل
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-[#0a0a0a] border-slate-800 text-slate-200 sm:max-w-md">
+          <DialogContent className="bg-white border-slate-100 shadow-xl sm:max-w-md rounded-[2rem]">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
+              <DialogTitle className="text-xl font-black text-slate-900 tracking-tight text-right">
                 تعديل القسم
               </DialogTitle>
             </DialogHeader>
@@ -231,7 +235,7 @@ export default function CategoryManager({
           size="sm"
           onClick={handleDelete}
           disabled={isLoading}
-          className="bg-transparent border-rose-500/30 text-rose-400 hover:bg-rose-500/10 hover:text-rose-300"
+          className="bg-white border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 shadow-sm rounded-lg"
         >
           {isLoading ? "..." : "حذف"}
         </Button>
@@ -239,17 +243,17 @@ export default function CategoryManager({
     );
   }
 
-  // 2. زر إضافة قسم جديد الرئيسي
+  // 2. زر إضافة قسم جديد الرئيسي (Primary Black Button)
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-cyan-600/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-600/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all px-6">
+        <Button className="bg-slate-900 text-white hover:bg-slate-800 shadow-sm hover:shadow-md transition-all px-6 py-5 rounded-xl font-bold">
           + إضافة قسم جديد
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#0a0a0a] border-slate-800 text-slate-200 sm:max-w-md">
+      <DialogContent className="bg-white border-slate-100 shadow-xl sm:max-w-md rounded-[2rem]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
+          <DialogTitle className="text-xl font-black text-slate-900 tracking-tight text-right">
             إضافة قسم جديد
           </DialogTitle>
         </DialogHeader>

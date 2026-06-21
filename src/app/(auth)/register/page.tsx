@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
-// 🚀 موديول رفع صورة المحل إلى Cloudinary مباشرة
+
+// 🚀 موديول رفع صورة المحل إلى Cloudinary
 async function uploadImage(file: File): Promise<string> {
   const { timestamp, signature, cloudName, apiKey, folder } =
     await getCloudinarySignature();
@@ -51,7 +52,6 @@ export default function RegisterPage() {
     storeAddress: "",
   });
 
-  // الـ States الخاصة بملف الصورة والمعاينة
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -115,16 +115,15 @@ export default function RegisterPage() {
   };
 
   return (
+    // 🎨 Premium Minimalist Light Theme (Apple/Zara Style)
     <div
-      className="flex min-h-screen items-center justify-center bg-[#050505] text-slate-200 p-4 md:p-8 selection:bg-purple-500/30"
+      className="flex min-h-screen items-center justify-center bg-[#f5f5f7] text-slate-900 p-4 md:p-8 selection:bg-slate-200"
       dir="rtl"
     >
-      <div className="w-full max-w-4xl bg-[#0a0a0a] rounded-2xl shadow-2xl border border-slate-800 p-6 md:p-8 relative overflow-hidden">
-        {/* توهج بنفسجي خفيف يناسب الهوية البصرية للتجار */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 blur-[100px] pointer-events-none"></div>
-
-        <div className="text-center mb-8 relative z-10">
-          <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+      {/* Container: أبيض نقي مع Border Radius كبير زي اللوجين بالظبط */}
+      <div className="w-full max-w-4xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-6 md:p-10 relative overflow-hidden">
+        <div className="text-center mb-10 relative z-10">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
             إنشاء حساب تاجر جديد
           </h1>
           <p className="text-sm text-slate-500 mt-2 font-medium">
@@ -133,28 +132,27 @@ export default function RegisterPage() {
         </div>
 
         {error && (
-          <div className="mb-6 rounded-lg bg-rose-500/10 p-3 text-sm text-rose-400 border border-rose-500/20 font-medium relative z-10">
+          <div className="mb-6 rounded-xl bg-red-50 p-4 text-sm text-red-600 border border-red-100 font-bold relative z-10 text-center">
             {error}
           </div>
         )}
 
         {successMsg && (
-          <div className="mb-6 rounded-lg bg-green-500/10 p-4 text-sm text-green-400 border border-green-500/20 text-center font-bold relative z-10 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+          <div className="mb-6 rounded-xl bg-green-50 p-4 text-sm text-green-700 border border-green-200 text-center font-bold relative z-10 shadow-sm">
             {successMsg}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-          {/* Responsive Grid System (موبايل فيرست بالكامل) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
             {/* 1. قسم البيانات الشخصية */}
-            <div className="space-y-4 bg-slate-900/20 border border-slate-800/60 p-5 rounded-2xl">
-              <h3 className="font-bold text-cyan-400 border-b border-slate-800 pb-2 text-base flex items-center gap-2">
-                <span>👤</span> البيانات الشخصية
+            <div className="space-y-5 bg-slate-50/50 border border-slate-100 p-6 rounded-[1.5rem]">
+              <h3 className="font-bold text-slate-900 border-b border-slate-200 pb-3 text-base flex items-center gap-2">
+                <span className="text-lg opacity-80">👤</span> البيانات الشخصية
               </h3>
 
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-slate-400">
+              <div className="space-y-2.5">
+                <Label htmlFor="name" className="text-slate-700 font-bold">
                   الاسم بالكامل
                 </Label>
                 <Input
@@ -163,12 +161,12 @@ export default function RegisterPage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="bg-[#050505] border-slate-800 text-slate-100 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                  className="bg-white border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-400">
+              <div className="space-y-2.5">
+                <Label htmlFor="email" className="text-slate-700 font-bold">
                   البريد الإلكتروني
                 </Label>
                 <Input
@@ -179,12 +177,12 @@ export default function RegisterPage() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="bg-[#050505] border-slate-800 text-slate-100 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all text-right"
+                  className="bg-white border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl text-right placeholder-slate-400"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-400">
+              <div className="space-y-2.5">
+                <Label htmlFor="password" className="text-slate-700 font-bold">
                   كلمة المرور
                 </Label>
                 <Input
@@ -196,20 +194,21 @@ export default function RegisterPage() {
                   minLength={6}
                   value={formData.password}
                   onChange={handleChange}
-                  className="bg-[#050505] border-slate-800 text-slate-100 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                  className="bg-white border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl"
                 />
               </div>
             </div>
 
             {/* 2. قسم بيانات التجارة والتوثيق */}
-            <div className="space-y-4 bg-slate-900/20 border border-slate-800/60 p-5 rounded-2xl">
-              <h3 className="font-bold text-purple-400 border-b border-slate-800 pb-2 text-base flex items-center gap-2">
-                <span>🏪</span> بيانات المحل والتوثيق
+            <div className="space-y-5 bg-slate-50/50 border border-slate-100 p-6 rounded-[1.5rem]">
+              <h3 className="font-bold text-slate-900 border-b border-slate-200 pb-3 text-base flex items-center gap-2">
+                <span className="text-lg opacity-80">🏪</span> بيانات المحل
+                والتوثيق
               </h3>
 
-              <div className="space-y-2">
-                <Label htmlFor="storeName" className="text-slate-400">
-                  اسم المحل / السنتر
+              <div className="space-y-2.5">
+                <Label htmlFor="storeName" className="text-slate-700 font-bold">
+                  اسم المحل / السنترال
                 </Label>
                 <Input
                   id="storeName"
@@ -217,12 +216,15 @@ export default function RegisterPage() {
                   required
                   value={formData.storeName}
                   onChange={handleChange}
-                  className="bg-[#050505] border-slate-800 text-slate-100 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all"
+                  className="bg-white border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber" className="text-slate-400">
+              <div className="space-y-2.5">
+                <Label
+                  htmlFor="phoneNumber"
+                  className="text-slate-700 font-bold"
+                >
                   رقم الهاتف (للتواصل عبر واتساب)
                 </Label>
                 <Input
@@ -233,12 +235,15 @@ export default function RegisterPage() {
                   required
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className="bg-[#050505] border-slate-800 text-slate-100 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all font-mono"
+                  className="bg-white border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl text-right"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="storeAddress" className="text-slate-400">
+              <div className="space-y-2.5">
+                <Label
+                  htmlFor="storeAddress"
+                  className="text-slate-700 font-bold"
+                >
                   عنوان المحل بالتفصيل
                 </Label>
                 <Input
@@ -247,18 +252,18 @@ export default function RegisterPage() {
                   required
                   value={formData.storeAddress}
                   onChange={handleChange}
-                  className="bg-[#050505] border-slate-800 text-slate-100 focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all"
+                  className="bg-white border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl"
                 />
               </div>
 
-              {/* حقل رفع صورة واجهة المحل أو الكارت الشخصي للتوثيق */}
-              <div className="space-y-2 border border-slate-800/80 bg-[#050505] p-3 rounded-xl mt-2">
-                <Label className="text-slate-400 text-xs font-bold">
+              {/* حقل رفع الصورة: تنظيف تام للـ UI */}
+              <div className="space-y-2.5 bg-white border border-slate-200 p-4 rounded-xl mt-4 shadow-sm">
+                <Label className="text-slate-700 text-xs font-bold">
                   صورة واجهة المحل أو الكارت الشخصي
                 </Label>
-                <div className="flex items-center gap-3 mt-1">
+                <div className="flex items-center gap-4 mt-2">
                   {previewUrl ? (
-                    <div className="relative w-14 h-14 bg-[#0a0a0a] rounded-lg border border-purple-500/30 overflow-hidden shrink-0 shadow-[0_0_10px_rgba(168,85,247,0.1)]">
+                    <div className="relative w-16 h-16 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden shrink-0 shadow-sm">
                       <Image
                         src={previewUrl}
                         alt="Store Preview"
@@ -267,7 +272,7 @@ export default function RegisterPage() {
                       />
                     </div>
                   ) : (
-                    <div className="w-14 h-14 bg-[#0a0a0a] rounded-lg border border-dashed border-slate-700 flex items-center justify-center text-slate-600 text-[10px] shrink-0">
+                    <div className="w-16 h-16 bg-slate-50 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-xs font-medium shrink-0">
                       لا صورة
                     </div>
                   )}
@@ -278,7 +283,7 @@ export default function RegisterPage() {
                     onChange={(e) =>
                       setSelectedFile(e.target.files?.[0] || null)
                     }
-                    className="cursor-pointer text-xs flex-1 bg-[#050505] border-slate-800 text-slate-400 file:bg-slate-800 file:text-slate-200 file:border-0 file:rounded file:px-3 file:py-1 file:mr-2 hover:file:bg-slate-700 transition-all"
+                    className="cursor-pointer text-xs flex-1 bg-white border-0 p-0 text-slate-500 file:bg-slate-100 file:text-slate-700 file:font-semibold file:border-0 file:rounded-lg file:px-4 file:py-2 file:mr-3 hover:file:bg-slate-200 transition-all h-auto"
                   />
                 </div>
               </div>
@@ -287,7 +292,7 @@ export default function RegisterPage() {
 
           <Button
             type="submit"
-            className="w-full bg-purple-600/10 text-purple-400 border border-purple-500/30 hover:bg-purple-600/20 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all py-6 text-lg font-bold"
+            className="w-full bg-slate-900 text-white hover:bg-slate-800 hover:-translate-y-0.5 shadow-sm transition-all py-7 text-lg font-bold rounded-[1rem] mt-4"
             disabled={isLoading || !!successMsg}
           >
             {isLoading
@@ -295,11 +300,11 @@ export default function RegisterPage() {
               : "تقديم طلب التوثيق كتاجر"}
           </Button>
 
-          <div className="text-center text-sm text-slate-500 mt-4">
+          <div className="text-center text-sm text-slate-500 font-medium">
             لديك حساب تاجر بالفعل؟{" "}
             <Link
               href="/login"
-              className="text-cyan-400 hover:underline font-bold transition-colors"
+              className="text-slate-900 hover:underline font-black transition-colors"
             >
               سجل الدخول مباشرة
             </Link>

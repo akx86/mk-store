@@ -39,11 +39,11 @@ export default function SearchBar({
         placeholder="ابحث عن موبايل، شاحن، جراب..."
         value={term}
         onChange={(e) => setTerm(e.target.value)}
-        className="w-full h-12 pl-4 pr-12 rounded-xl border border-slate-800 bg-[#0a0a0a] text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 focus:shadow-[0_0_15px_rgba(6,182,212,0.15)] transition-all"
+        className="w-full h-12 pl-4 pr-12 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all"
       />
       <button
         type="submit"
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-500 hover:text-cyan-400 transition-colors"
+        className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-900 transition-colors"
         aria-label="بحث"
       >
         <Search size={20} />

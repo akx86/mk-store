@@ -23,6 +23,10 @@ const ProductSchema: Schema = new Schema(
       ref: "Category",
       required: true,
     },
+    isHidden: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

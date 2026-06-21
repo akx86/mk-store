@@ -41,17 +41,15 @@ export default function LoginPage() {
   };
 
   return (
-    // 🎨 Clean Cyberpunk Background
+    // 🎨 Premium Minimalist Light Background (Matches Product Details)
     <div
-      className="flex min-h-screen items-center justify-center bg-[#050505] text-slate-200 p-4 selection:bg-cyan-500/30"
+      className="flex min-h-screen items-center justify-center bg-[#f5f5f7] text-slate-900 p-4 selection:bg-slate-200"
       dir="rtl"
     >
-      <div className="w-full max-w-md space-y-6 rounded-2xl bg-[#0a0a0a] p-8 shadow-2xl border border-slate-800 relative group">
-        {/* تأثير نيون خلفي خفيف للكارت */}
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500/10 to-purple-600/10 rounded-2xl blur-xl opacity-70 pointer-events-none"></div>
-
+      {/* حاوية اللوجين: أبيض نقي، حواف ناعمة، وظل خفيف جداً يبرز الكارت */}
+      <div className="w-full max-w-md space-y-8 rounded-[2rem] bg-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative group">
         <div className="text-center relative z-10">
-          <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-400">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
             تسجيل الدخول
           </h1>
           <p className="text-sm text-slate-500 mt-2 font-medium">
@@ -59,15 +57,16 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* رسالة الخطأ: ألوان هادية ومناسبة للعين في الفواتح */}
         {error && (
-          <div className="rounded-lg bg-rose-500/10 p-3 text-sm text-rose-400 border border-rose-500/20 font-medium relative z-10">
+          <div className="rounded-xl bg-red-50 p-4 text-sm text-red-600 border border-red-100 font-bold relative z-10 text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-slate-400">
+          <div className="space-y-2.5">
+            <Label htmlFor="email" className="text-slate-700 font-bold">
               البريد الإلكتروني
             </Label>
             <Input
@@ -78,12 +77,13 @@ export default function LoginPage() {
               required
               placeholder="admin@catalog.com"
               dir="ltr"
-              className="bg-[#050505] border-slate-800 text-slate-100 placeholder-slate-700 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all text-right"
+              // حقول إدخال نظيفة جداً بتدي إطار غامق عند التركيز (Focus)
+              className="bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all text-right h-12 rounded-xl"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-slate-400">
+          <div className="space-y-2.5">
+            <Label htmlFor="password" className="text-slate-700 font-bold">
               كلمة المرور
             </Label>
             <Input
@@ -94,13 +94,14 @@ export default function LoginPage() {
               required
               placeholder="••••••••"
               dir="ltr"
-              className="bg-[#050505] border-slate-800 text-slate-100 placeholder-slate-700 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+              className="bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-all h-12 rounded-xl"
             />
           </div>
 
+          {/* زر الأكشن: صلب، لون قوي (أسود)، وبيرتفع لفوق خفيف جداً للفت الانتباه */}
           <Button
             type="submit"
-            className="w-full bg-cyan-600/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-600/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all py-6 font-bold text-base"
+            className="w-full bg-slate-900 text-white hover:bg-slate-800 hover:-translate-y-0.5 shadow-sm transition-all h-12 rounded-xl font-bold text-base mt-2"
             disabled={isLoading}
           >
             {isLoading ? "جاري التحقق من الهوية..." : "دخول مباشر"}

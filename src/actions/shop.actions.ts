@@ -12,7 +12,10 @@ export async function getProductById(id: string) {
   try {
     await dbConnect();
 
-    const product = await Product.findById(id)
+    const product = await Product.findOne({
+      _id: id,
+      isHidden: { $ne: true },
+    })
       .populate("category", "name slug")
       .lean();
 
@@ -33,7 +36,10 @@ export async function getProductsByCategorySlug(slug: string) {
       return { error: "القسم غير موجود" };
     }
 
-    const products = await Product.find({ category: category._id })
+    const products = await Product.find({
+      category: category._id,
+      isHidden: { $ne: true },
+    })
       .sort({ createdAt: -1 })
       .populate("category", "name slug")
       .lean();
@@ -51,10 +57,11 @@ export async function getShopData(
 ) {
   try {
     await dbConnect();
-    const limit = 8;
+    const limit = 10;
     const skip = (page - 1) * limit;
 
     const query: any = {};
+    query.isHidden = { $ne: true };
     if (search) {
       query.title = { $regex: search, $options: "i" };
     }

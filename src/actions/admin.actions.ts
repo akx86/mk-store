@@ -110,7 +110,6 @@ export async function getProducts() {
       .sort({ createdAt: -1 })
       .lean();
 
-    // 🧹 التنظيف الهندسي (Sanitization) لكل من الـ Product ID والـ Category ID
     const safeProducts = products.map((prod: any) => ({
       _id: prod._id.toString(),
       title: prod.title,
@@ -118,13 +117,13 @@ export async function getProducts() {
       images: prod.images || [],
       retailPrice: prod.retailPrice,
       wholesalePrice: prod.wholesalePrice,
-      // تأمين الكائن المدمج (Populated Object)
       category: prod.category
         ? {
             _id: prod.category._id.toString(),
             name: prod.category.name,
           }
         : null,
+      isHidden: prod.isHidden || false,
     }));
 
     return { success: true, products: safeProducts };
@@ -143,13 +142,14 @@ export async function updateProduct(
     retailPrice: number;
     wholesalePrice: number;
     category: string;
+    isHidden: boolean;
   }>,
 ) {
   try {
     await verifyAdmin();
     await dbConnect();
 
-    await Product.findByIdAndUpdate(id, updateData);
+    await Product.findByIdAndUpdate(id, updateData, { new: true });
 
     revalidatePath("/admin/products");
     revalidatePath("/");

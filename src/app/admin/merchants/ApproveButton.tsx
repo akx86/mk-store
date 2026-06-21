@@ -30,10 +30,11 @@ export default function ApproveButton({ userId }: { userId: string }) {
   };
 
   return (
+    // 🎨 Clean Success Action Button
     <Button
       onClick={handleApprove}
       disabled={isLoading}
-      className="bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500/20 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] transition-all font-bold tracking-wide"
+      className="bg-white border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 shadow-sm rounded-lg font-bold transition-all"
       size="sm"
     >
       {isLoading ? "جاري الاعتماد..." : "موافقة واعتماد"}

@@ -10,36 +10,43 @@ export default async function MerchantsPage() {
   const merchants = res.success ? res.merchants : [];
 
   return (
-    <div className="space-y-6" dir="rtl">
+    <div className="space-y-8" dir="rtl">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-500">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
           طلبات تسجيل التجار
         </h1>
       </div>
 
-      <div className="bg-[#0a0a0a] rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
+      {/* 🎨 Premium Minimalist Table Container */}
+      <div className="bg-white rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto hide-scrollbar">
           <table className="w-full text-right min-w-[900px] whitespace-nowrap">
-            <thead className="bg-slate-900/80 border-b border-slate-800">
+            <thead className="bg-slate-50/80 border-b border-slate-100">
               <tr>
-                <th className="p-4 font-bold text-purple-400">المحل</th>
-                <th className="p-4 font-bold text-purple-400">بيانات التاجر</th>
-                <th className="p-4 font-bold text-purple-400">التواصل</th>
-                <th className="p-4 font-bold text-purple-400">تاريخ الطلب</th>
-                <th className="p-4 font-bold text-purple-400 text-center">
+                <th className="p-4 md:p-5 font-bold text-slate-700">المحل</th>
+                <th className="p-4 md:p-5 font-bold text-slate-700">
+                  بيانات التاجر
+                </th>
+                <th className="p-4 md:p-5 font-bold text-slate-700 text-left">
+                  التواصل
+                </th>
+                <th className="p-4 md:p-5 font-bold text-slate-700">
+                  تاريخ الطلب
+                </th>
+                <th className="p-4 md:p-5 font-bold text-slate-700 text-center">
                   الإجراءات
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-slate-100">
               {merchants?.length === 0 ? (
                 <tr>
                   <td
                     colSpan={5}
                     className="p-12 text-center text-slate-500 font-medium"
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="text-4xl">🤝</span>
+                    <div className="flex flex-col items-center gap-3">
+                      <span className="text-4xl opacity-50">🤝</span>
                       لا توجد طلبات معلقة حالياً.
                     </div>
                   </td>
@@ -48,52 +55,52 @@ export default async function MerchantsPage() {
                 merchants?.map((merchant: any) => (
                   <tr
                     key={merchant._id}
-                    className="hover:bg-slate-900/50 transition-colors group"
+                    className="hover:bg-slate-50/50 transition-colors group bg-white"
                   >
-                    <td className="p-4">
+                    <td className="p-4 md:p-5">
                       <div className="flex items-center gap-4">
                         {merchant.storeImage ? (
-                          <div className="relative w-12 h-12 rounded-xl border border-slate-700 overflow-hidden shrink-0">
+                          <div className="relative w-12 h-12 rounded-xl border border-slate-200 overflow-hidden shrink-0 shadow-sm">
                             <Image
                               src={merchant.storeImage}
                               alt={merchant.storeName}
                               fill
-                              className="object-cover"
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                           </div>
                         ) : (
-                          <div className="w-12 h-12 bg-[#050505] rounded-xl flex items-center justify-center text-xs text-slate-600 border border-dashed border-slate-700 shrink-0">
+                          <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-xs font-bold text-slate-400 border border-dashed border-slate-300 shrink-0">
                             لا صورة
                           </div>
                         )}
                         <div>
-                          <div className="font-bold text-slate-200 text-sm md:text-base">
+                          <div className="font-bold text-slate-900 text-sm md:text-base">
                             {merchant.storeName}
                           </div>
-                          <div className="text-xs text-slate-500 truncate max-w-[200px] whitespace-normal">
+                          <div className="text-xs text-slate-500 font-medium truncate max-w-[200px] whitespace-normal">
                             {merchant.storeAddress}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="p-4">
-                      <div className="font-bold text-slate-300 text-sm md:text-base">
+                    <td className="p-4 md:p-5">
+                      <div className="font-bold text-slate-900 text-sm md:text-base">
                         {merchant.name}
                       </div>
-                      <div className="text-sm text-slate-500 font-mono">
+                      <div className="text-sm text-slate-500 font-mono font-medium">
                         {merchant.email}
                       </div>
                     </td>
                     <td
-                      className="p-4 font-mono text-cyan-400 text-sm"
+                      className="p-4 md:p-5 font-mono text-slate-700 font-bold text-sm text-left"
                       dir="ltr"
                     >
                       {merchant.phoneNumber}
                     </td>
-                    <td className="p-4 text-sm text-slate-500 font-mono">
+                    <td className="p-4 md:p-5 text-sm text-slate-500 font-mono font-medium">
                       {merchant.createdAt}
                     </td>
-                    <td className="p-4 text-center">
+                    <td className="p-4 md:p-5 text-center">
                       <ApproveButton userId={merchant._id} />
                     </td>
                   </tr>
