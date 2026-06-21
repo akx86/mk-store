@@ -108,13 +108,26 @@ export default function CategoryManager({
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
 
+  // 🌟 دالة مسح الصورة الإجبارية
+  const handleRemoveImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    const fileInput = document.getElementById(
+      "category-image-input",
+    ) as HTMLInputElement;
+    if (fileInput) fileInput.value = "";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
     try {
-      let finalImageUrl = category?.image || "";
+      // 🌟 التعديل هنا: لو العميل مسح الصورة (previewUrl بقى null)، بيبعت فاضي للداتا بيز
+      let finalImageUrl = previewUrl ? category?.image || "" : "";
 
       if (selectedFile) {
         finalImageUrl = await uploadImage(selectedFile);
@@ -222,13 +235,24 @@ export default function CategoryManager({
         <Label className="text-slate-700 font-bold text-xs">صورة القسم</Label>
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
           {previewUrl ? (
-            <div className="relative w-16 h-16 bg-slate-50 rounded-xl border border-slate-200 overflow-hidden flex-shrink-0 shadow-sm">
-              <Image
-                src={previewUrl}
-                alt="Preview"
-                fill
-                className="object-cover"
-              />
+            // 🌟 الزرار دلوقتي ظاهر وثابت وبارز فوق الصورة
+            <div className="relative w-16 h-16 bg-slate-50 rounded-xl border border-slate-200 flex-shrink-0 shadow-sm">
+              <div className="relative w-full h-full rounded-xl overflow-hidden">
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="absolute -top-2 -left-2 z-20 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow-md hover:bg-red-600 transition-colors cursor-pointer border-2 border-white"
+                title="حذف الصورة"
+              >
+                ✕
+              </button>
             </div>
           ) : (
             <div className="w-16 h-16 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-xs font-medium flex-shrink-0">
@@ -236,6 +260,7 @@ export default function CategoryManager({
             </div>
           )}
           <Input
+            id="category-image-input" // 🌟 ID ضروري عشان دالة الحذف تعرف تصفره
             type="file"
             accept="image/*"
             onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
