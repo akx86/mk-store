@@ -71,13 +71,10 @@ export default function ProductManager({
   const [isHidden, setIsHidden] = useState(product?.isHidden || false);
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
 
-  // 🌟 تعديل الـ State لتدعم مصفوفة من الملفات والروابط
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>(
-    product?.images || [],
-  );
+  // 🌟 تعديل: دمجنا state الصور والملفات في state واحدة عشان نقدر نرتبهم ونمسح منهم بسهولة
+  const [media, setMedia] = useState<{ url: string; file: File | null }[]>([]);
 
-  // 🌟 مزامنة البيانات أول ما المودال يفتح (عشان مشكلة الـ Out of Stock)
+  // 🌟 تعديل: تحديث الـ useEffect ليتوافق مع الـ state الجديدة
   useEffect(() => {
     if (isOpen && product) {
       setTitle(product.title || "");
@@ -86,9 +83,14 @@ export default function ProductManager({
       setWholesalePrice(product.wholesalePrice || "");
       setCategoryId(product.category?._id || "");
       setIsHidden(product.isHidden || false);
-      setPreviewUrls(product.images || []);
-      setSelectedFiles([]);
       setIsFeatured(product.isFeatured || false);
+
+      // جلب الصور القديمة من الداتا بيز
+      const existingMedia = (product.images || []).map((url: string) => ({
+        url,
+        file: null,
+      }));
+      setMedia(existingMedia);
     } else if (isOpen && !product) {
       setTitle("");
       setDescription("");
@@ -96,23 +98,56 @@ export default function ProductManager({
       setWholesalePrice("");
       setCategoryId("");
       setIsHidden(false);
-      setPreviewUrls([]);
-      setSelectedFiles([]);
       setIsFeatured(false);
+      setMedia([]);
     }
   }, [isOpen, product]);
 
-  // 🌟 لوجيك عرض المعاينة لأكثر من صورة
+  // 🌟 تنظيف الروابط الوهمية لعدم تسريب الذاكرة
   useEffect(() => {
-    if (selectedFiles.length === 0) return;
-    const urls = selectedFiles.map((file) => URL.createObjectURL(file));
-    setPreviewUrls(urls);
-
-    // تنظيف الميموري
     return () => {
-      urls.forEach((url) => URL.revokeObjectURL(url));
+      media.forEach((item) => {
+        if (item.file) URL.revokeObjectURL(item.url);
+      });
     };
-  }, [selectedFiles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 🌟 تعديل: دوال التعامل مع الصور (اختيار، حذف، سحب، إفلات)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    const newFiles = Array.from(e.target.files);
+    const newMediaItems = newFiles.map((file) => ({
+      url: URL.createObjectURL(file),
+      file,
+    }));
+    setMedia((prev) => [...prev, ...newMediaItems]);
+    e.target.value = ""; // تصفير الحقل لاختيار نفس الصورة مجدداً إن لزم
+  };
+
+  const removeImage = (indexToRemove: number) => {
+    setMedia((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("dragIndex", index.toString());
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    const dragIndex = Number(e.dataTransfer.getData("dragIndex"));
+    if (dragIndex === dropIndex) return;
+
+    const newMedia = [...media];
+    const [draggedItem] = newMedia.splice(dragIndex, 1);
+    newMedia.splice(dropIndex, 0, draggedItem);
+    setMedia(newMedia);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,13 +157,15 @@ export default function ProductManager({
     try {
       if (!categoryId) throw new Error("يجب اختيار القسم أولاً");
 
-      let finalImageUrls = product?.images || [];
+      // 🌟 تعديل: اللوجيك الجديد للرفع بالترتيب الصحيح (بيحتفظ بالقديم ويرفع الجديد)
+      const uploadPromises = media.map(async (item) => {
+        if (item.file) {
+          return await uploadImage(item.file);
+        }
+        return item.url;
+      });
 
-      // 🌟 رفع الصور بالتوازي باستخدام Promise.all لتوفير وقت المعالجة
-      if (selectedFiles.length > 0) {
-        const uploadPromises = selectedFiles.map((file) => uploadImage(file));
-        finalImageUrls = await Promise.all(uploadPromises);
-      }
+      const finalImageUrls = await Promise.all(uploadPromises);
 
       const productData = {
         title,
@@ -138,7 +175,7 @@ export default function ProductManager({
         category: categoryId,
         isHidden,
         isFeatured,
-        images: finalImageUrls, // مصفوفة الصور الكاملة
+        images: finalImageUrls, // مصفوفة الصور المرتبة والنهائية
       };
 
       const res = product?._id
@@ -310,27 +347,48 @@ export default function ProductManager({
       </div>
 
       <div className="space-y-2.5 bg-white border border-slate-200 p-4 rounded-xl shadow-sm mt-4">
-        <Label className="text-slate-700 font-bold text-xs">صور المنتج</Label>
+        <Label className="text-slate-700 font-bold text-xs flex justify-between">
+          <span>صور المنتج (اسحب للترتيب)</span>
+        </Label>
 
-        {/* 🌟 حاوية عرض الصور المصغرة */}
-        <div className="flex flex-wrap gap-3 mt-3">
-          {previewUrls.length > 0 ? (
-            previewUrls.map((url, idx) => (
+        {/* 🌟 تعديل: تحديث حاوية الصور لدعم الترتيب والحذف */}
+        <div className="flex flex-wrap gap-3 mt-3 min-h-[5rem] p-2 bg-slate-50 border border-dashed border-slate-300 rounded-xl">
+          {media.length > 0 ? (
+            media.map((item, idx) => (
               <div
                 key={idx}
-                className="relative w-16 h-16 bg-slate-50 rounded-xl border border-slate-200 overflow-hidden flex-shrink-0 shadow-sm"
+                draggable
+                onDragStart={(e) => handleDragStart(e, idx)}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, idx)}
+                className="relative w-16 h-16 bg-white rounded-xl border border-slate-200 cursor-move overflow-hidden flex-shrink-0 shadow-sm group hover:border-indigo-400 transition-all"
               >
                 <Image
-                  src={url}
+                  src={item.url}
                   alt={`Preview ${idx + 1}`}
                   fill
                   className="object-cover"
                 />
+
+                {/* زرار الحذف اللي بيظهر بالهوفر */}
+                <button
+                  type="button"
+                  onClick={() => removeImage(idx)}
+                  className="absolute top-1 right-1 bg-red-500/90 text-white w-4 h-4 rounded-full flex items-center justify-center text-[8px] opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm"
+                  title="حذف الصورة"
+                >
+                  ✕
+                </button>
+
+                {/* رقم ترتيب الصورة عشان العميل يكون شايف */}
+                <div className="absolute bottom-0 left-0 bg-slate-900/60 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-tr-lg">
+                  {idx + 1}
+                </div>
               </div>
             ))
           ) : (
-            <div className="w-16 h-16 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-[10px] font-medium flex-shrink-0 text-center">
-              لا توجد صور
+            <div className="w-full h-full flex items-center justify-center text-slate-400 text-[10px] font-medium text-center">
+              لا توجد صور، اضغط أدناه للاختيار
             </div>
           )}
         </div>
@@ -340,11 +398,7 @@ export default function ProductManager({
             type="file"
             accept="image/*"
             multiple // 🌟 تفعيل اختيار أكثر من ملف
-            onChange={(e) => {
-              if (e.target.files) {
-                setSelectedFiles(Array.from(e.target.files));
-              }
-            }}
+            onChange={handleFileChange}
             className="cursor-pointer w-full bg-white border-0 p-0 text-slate-500 file:bg-slate-100 file:text-slate-700 file:font-semibold file:border-0 file:rounded-lg file:px-4 file:py-2 hover:file:bg-slate-200 transition-all h-auto"
           />
         </div>
