@@ -315,6 +315,16 @@ export default function RegisterPage() {
           >
             {isLoading ? "جاري رفع البيانات..." : "تقديم طلب التوثيق كتاجر"}
           </Button>
+
+          <div className="text-center text-sm text-slate-500 font-medium">
+            لديك حساب تاجر بالفعل؟{" "}
+            <Link
+              href="/login"
+              className="text-slate-900 hover:underline font-black transition-colors"
+            >
+              سجل الدخول مباشرة
+            </Link>
+          </div>
         </form>
       </div>
     </div>
